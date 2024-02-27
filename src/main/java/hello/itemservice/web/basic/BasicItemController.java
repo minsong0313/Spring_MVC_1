@@ -33,13 +33,13 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    //상품 등록
+    //상품 등록 폼(get)
     @GetMapping("/add")
     public String addForm() {
         return "basic/addForm";
     }
 
- //   @PostMapping("/add")
+//       @PostMapping("/add")
     public String addItemV1(@RequestParam String itemName,
                        @RequestParam int price,
                        @RequestParam Integer quantity,
@@ -57,7 +57,7 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV2(@ModelAttribute("item") Item item, Model model) {
 
         itemRepository.save(item);
@@ -66,13 +66,14 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV3(@ModelAttribute Item item) {
         //@ModelAttribute에 이름 빼줘도 됨, 자동으로 클래스명의 첫 글자만 소문자로 바꾼 이름이 들어감(ex. HelloData -> helloData)
         itemRepository.save(item);
         return "basic/item";
     }
 
+    //상품 등록 처리(post)
     @PostMapping("/add")
     public String addItemV4(Item item) {
         //@ModelAttribute 자체도 생략 가능
@@ -80,12 +81,20 @@ public class BasicItemController {
         return "basic/item";
     }
 
+    //상품 수정 폼(get)
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable Long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
 
-
-
-
-
-
+    //상품 수정 처리(post)
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}"; //리다이렉트 해줘야함
+    }
 
 
 
